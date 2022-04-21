@@ -272,11 +272,11 @@
 		const textureOpacity = 0.75;
 		var cubeMaterial = [
 							new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('/img/CarbonTexture_01.png'), transparent: true, opacity: textureOpacity, side: THREE.DoubleSide }), //RIGHT SIDE 
-                            new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('/img/CarbonTexture_01.png'), transparent: true, opacity: textureOpacity, side: THREE.DoubleSide }), //LEFT SIDE
-                            new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('/img/CarbonTexture_01.png'), transparent: true, opacity: textureOpacity, side: THREE.DoubleSide }), //TOP SIDE
-                            new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('/img/CarbonTexture_01.png'), transparent: true, opacity: textureOpacity, side: THREE.DoubleSide }), //BOTTOM SIDE
-                            new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('/img/CarbonTexture_01.png'), transparent: true, opacity: textureOpacity, side: THREE.DoubleSide }), //FRONT SIDE
-                            new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('/img/CarbonTexture_01.png'), transparent: true, opacity: textureOpacity, side: THREE.DoubleSide }) //BACK SIDE
+                            new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('./img/CarbonTexture_01.png'), transparent: true, opacity: textureOpacity, side: THREE.DoubleSide }), //LEFT SIDE
+                            new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('./img/CarbonTexture_01.png'), transparent: true, opacity: textureOpacity, side: THREE.DoubleSide }), //TOP SIDE
+                            new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('./img/CarbonTexture_01.png'), transparent: true, opacity: textureOpacity, side: THREE.DoubleSide }), //BOTTOM SIDE
+                            new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('./img/CarbonTexture_01.png'), transparent: true, opacity: textureOpacity, side: THREE.DoubleSide }), //FRONT SIDE
+                            new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('./img/CarbonTexture_01.png'), transparent: true, opacity: textureOpacity, side: THREE.DoubleSide }) //BACK SIDE
                         ];
 
     	var imageMaterial2 = new THREE.MeshFaceMaterial( cubeMaterial );
