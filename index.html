@@ -10,8 +10,8 @@
 <!-- <script src="js/PreformanceMonitor/stats.min.js"></script> --> 
 <!-- ar.js -->
 <script src="js/ARJS/ar-threex.js"></script>
-<!--Set Base URL for the THEEx Library to refernece-->
-<script>THREEx.ArToolkitContext.baseURL = '../'</script>
+<!--Set Base URL for the THEEx Library to refernece normally '../' -->
+<script>THREEx.ArToolkitContext.baseURL = './'</script>
 
 <body style='margin : 0px; overflow: hidden;'>
 	
@@ -30,8 +30,8 @@
 			alpha: true
 		});
 		renderer.setClearColor(new THREE.Color('lightgrey'), 0)
-		renderer.setSize(640, 480);
-		//renderer.setSize(window.innerWidth, window.innerHeight);
+		//renderer.setSize(640, 480);
+		renderer.setSize(window.innerWidth, window.innerHeight);
 		renderer.domElement.style.position = 'absolute'
 		renderer.domElement.style.top = '0px'
 		renderer.domElement.style.left = '0px'
