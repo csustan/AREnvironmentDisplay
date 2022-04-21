@@ -1,14 +1,24 @@
 <!DOCTYPE html>
 <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+<title>A cube of pollution</title>
 <!--redirect favicon-->
 <link rel="shortcut icon" href="./img/favicon.ico">
 <!-- three.js library -->
 <script src='js/ThreeJS/three.js'></script>
+<!--Additional Libraries-->
+<!-- States frame rate monitor -->
+<!-- <script src="js/PreformanceMonitor/stats.min.js"></script> --> 
 <!-- ar.js -->
 <script src="js/ARJS/ar-threex.js"></script>
-<script>THREEx.ArToolkitContext.baseURL = '/'</script>
+<!--Set Base URL for the THEEx Library to refernece normally '../' -->
+<script>THREEx.ArToolkitContext.baseURL = './'</script>
 
-<body style='font-family: Monospace;'>
+<body style='margin : 0px; overflow: hidden;'>
+	
+	<div style='position: absolute; top: 10px; width:100%; text-align: center; z-index: 1;'>
+		<div style="font-size: 20pt;  text-align: center;"><label><a href="https://www.csustan.edu/sustainability/news-events">Click For Info on Carbon Footprints</a></label></div>
+	</div>
+
 	<script>
 		//////////////////////////////////////////////////////////////////////////////////
 		//		Init
@@ -25,11 +35,12 @@
 		renderer.domElement.style.position = 'absolute'
 		renderer.domElement.style.top = '0px'
 		renderer.domElement.style.left = '0px'
+		//renderer.domElement.style.zIndex = '1';
 		document.body.appendChild(renderer.domElement);
 
 		// array of functions for the rendering loop
 		var onRenderFcts = [];
-		var arToolkitContext, arMarkerControls;
+		var arToolkitContext, arMarkerControls, markerRoot;
 
 		// init scene and camera
 		var scene = new THREE.Scene();
@@ -42,6 +53,8 @@
 		var camera = new THREE.Camera();
 		scene.add(camera);
 
+		markerRoot = new THREE.Group
+		scene.add(markerRoot)
 		////////////////////////////////////////////////////////////////////////////////
 		//          handle arToolkitSource
 		////////////////////////////////////////////////////////////////////////////////
@@ -63,6 +76,9 @@
 		})
 
 		arToolkitSource.init(function onReady() {
+			//initARContext()
+			//onResize()
+
 			arToolkitSource.domElement.addEventListener('canplay', () => {
 				console.log(
 					'canplay',
@@ -77,7 +93,27 @@
 			setTimeout(() => {
 				onResize()
 			}, 2000);
+
 		})
+
+//		arToolkitSource.init(function onReady() {
+//			arToolkitSource.domElement.addEventListener('canplay', () => {
+//				console.log(
+//					'canplay',
+//					'actual source dimensions',
+//					arToolkitSource.domElement.videoWidth,
+//					arToolkitSource.domElement.videoHeight
+//				);
+//
+//				initARContext();
+//			});
+//			window.arToolkitSource = arToolkitSource;
+//			setTimeout(() => {
+//				onResize()
+//			}, 2000);
+//		})
+
+
 
 		// handle resize
 		window.addEventListener('resize', function () {
@@ -104,7 +140,8 @@
 				detectionMode: 'mono'
 			})
 			// initialize it
-			arToolkitContext.init(() => { // copy projection matrix to camera
+			arToolkitContext.init(function onCompleted() {
+				// copy projection matrix to camera
 				camera.projectionMatrix.copy(arToolkitContext.getProjectionMatrix());
 
 				arToolkitContext.arController.orientation = getSourceOrientation();
@@ -113,20 +150,47 @@
 				console.log('arToolkitContext', arToolkitContext);
 				window.arToolkitContext = arToolkitContext;
 			})
-
-			// MARKER
-			arMarkerControls = new THREEx.ArMarkerControls(arToolkitContext, camera, {
+			
+			artoolkitMarker = new THREEx.ArMarkerControls(arToolkitContext, markerRoot, {
 				type: 'pattern',
-				 patternUrl : THREEx.ArToolkitContext.baseURL + 'data/lambda.patt',
-				// as we controls the camera, set changeMatrixMode: 'cameraTransformMatrix'
-				changeMatrixMode: 'cameraTransformMatrix'
+				patternUrl: THREEx.ArToolkitContext.baseURL + 'data/lambda.patt',
+				
+				smooth: true,
+	   			 // number of matrices to smooth tracking over, more = smoother but slower follow
+	   			smoothCount: 5,
+	    		// distance tolerance for smoothing, if smoothThreshold # of matrices are under tolerance, tracking will stay still
+	    		smoothTolerance: 0.01,
+	    		// threshold for smoothing, will keep still unless enough matrices are over tolerance
+	    		smoothThreshold: 2 //Wobble control	
+				
 			})
-
-			scene.visible = false
-
-			console.log('ArMarkerControls', arMarkerControls);
-			window.arMarkerControls = arMarkerControls;
+											  
 		}
+
+		//	arToolkitContext.init(() => { // copy projection matrix to camera
+		//		camera.projectionMatrix.copy(arToolkitContext.getProjectionMatrix());
+
+		//		arToolkitContext.arController.orientation = getSourceOrientation();
+		//		arToolkitContext.arController.options.orientation = getSourceOrientation();
+
+		//		console.log('arToolkitContext', arToolkitContext);
+		//		window.arToolkitContext = arToolkitContext;
+		//	})
+
+		//	// MARKER
+		//	arMarkerControls = new THREEx.ArMarkerControls(arToolkitContext, camera, {
+		//		type: 'pattern',
+		//		 patternUrl : THREEx.ArToolkitContext.baseURL + 'data/lambda.patt',
+		//		// as we controls the camera, set changeMatrixMode: 'cameraTransformMatrix'
+		//		changeMatrixMode: 'cameraTransformMatrix'
+		//	})
+
+		//	scene.visible = false
+
+		//	console.log('ArMarkerControls', arMarkerControls);
+		//	window.arMarkerControls = arMarkerControls;
+		//}
+
 
 
 		function getSourceOrientation() {
@@ -157,10 +221,36 @@
 
 			arToolkitContext.update(arToolkitSource.domElement)
 
-			// update scene.visible if the marker is seen
-			scene.visible = camera.visible
+			//  // update scene.visible if the marker is seen
+			//scene.visible = camera.visible
 		})
 
+		////////////////////////////////////////////////////////////////////////////////
+		//          Create a ArMarkerControls
+		////////////////////////////////////////////////////////////////////////////////
+
+		var markerRoot = new THREE.Group
+		scene.add(markerRoot)
+
+
+		// build a smoothedControls
+		var smoothedRoot = new THREE.Group()
+		scene.add(smoothedRoot)
+		var smoothedControls = new THREEx.ArSmoothedControls(smoothedRoot, {
+			
+			lerpPosition: 0.8,
+			lerpQuaternion: 0.05,  //jiggle control
+			lerpScale: 1,
+			
+			//Defaults:
+			//lerpPosition: 0.4,
+			//lerpQuaternion: 0.3,
+			//lerpScale: 1,
+
+		})
+		onRenderFcts.push(function (delta) {
+			smoothedControls.update(markerRoot)
+		})
 		//////////////////////////////////////////////////////////////////////////////////
 		//		add an object in the scene
 		//////////////////////////////////////////////////////////////////////////////////
@@ -178,7 +268,8 @@
 
 		// //const imageMaterial = new THREE.MeshBasicMaterial( { color: 0xffffff, envMap: textureCube } );
 		
-		const textureOpacity = 0.5;
+		var arWorldRoot = smoothedRoot;
+		const textureOpacity = 0.75;
 		var cubeMaterial = [
 							new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('/img/CarbonTexture_01.png'), transparent: true, opacity: textureOpacity, side: THREE.DoubleSide }), //RIGHT SIDE 
                             new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('/img/CarbonTexture_01.png'), transparent: true, opacity: textureOpacity, side: THREE.DoubleSide }), //LEFT SIDE
@@ -201,19 +292,25 @@
 		var cubeMesh = new THREE.Mesh(geometry, imageMaterial2);
 		//var cubeMesh = new THREE.Mesh(geometry, imageMaterial);
 		//cubeMesh.position.y = geometry.parameters.height / 2
-
+		
 		cubeMesh.position.set( 0, -8, -6.5); // The cube is about 16 units, and needs to have the A-frame about in the bottom middle 
 											 //the A-frame with the printed marker is about three feet off the ground.
-		scene.add(cubeMesh);
-
+		//scene.add(cubeMesh);
+		arWorldRoot.add(cubeMesh);
+		onRenderFcts.push(function () {
+			cubeMesh.rotation.z += 0.001
+		})
 
 		//////////////////////////////////////////////////////////////////////////////////
 		//		render the whole thing on the page
 		//////////////////////////////////////////////////////////////////////////////////
-
+		//if issues with frame rate occur, add a stats box to monitor it:
+		//var stats = new Stats(); //test code 
+		//document.body.appendChild(stats.dom); //Test Code
 		// render the scene
 		onRenderFcts.push(function () {
 			renderer.render(scene, camera);
+			//stats.update(); //Test Code
 		})
 
 		console.dir(onRenderFcts);		//test code
