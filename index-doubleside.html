@@ -4,12 +4,12 @@
 <!--redirect favicon-->
 <link rel="shortcut icon" href="./img/favicon.ico">
 <!-- three.js library -->
-<script src='js/ThreeJS/three.js'></script>
+<script src='./js/ThreeJS/three.js'></script>
 <!--Additional Libraries-->
 <!-- States frame rate monitor -->
 <!-- <script src="js/PreformanceMonitor/stats.min.js"></script> --> 
 <!-- ar.js -->
-<script src="js/ARJS/ar-threex.js"></script>
+<script src="./js/ARJS/ar-threex.js"></script>
 <!--Set Base URL for the THEEx Library to refernece normally '../' -->
 <script>THREEx.ArToolkitContext.baseURL = './js/'</script>
 
@@ -159,9 +159,9 @@
 	   			 // number of matrices to smooth tracking over, more = smoother but slower follow
 	   			smoothCount: 5,
 	    		// distance tolerance for smoothing, if smoothThreshold # of matrices are under tolerance, tracking will stay still
-	    		smoothTolerance: 0.01,
+	    		smoothTolerance: .05,//0.01, //skippy stutter controler
 	    		// threshold for smoothing, will keep still unless enough matrices are over tolerance
-	    		smoothThreshold: 2 //Wobble control	
+	    		smoothThreshold: 3//2 //Tracking Update/Wobble control	
 				
 			})
 											  
@@ -238,9 +238,9 @@
 		scene.add(smoothedRoot)
 		var smoothedControls = new THREEx.ArSmoothedControls(smoothedRoot, {
 			
-			lerpPosition: 0.8,
-			lerpQuaternion: 0.05,  //jiggle control
-			lerpScale: 1,
+			lerpPosition: .5, //Stutter
+			lerpQuaternion: 0.5,  //jiggle control
+			lerpScale: .5,
 			
 			//Defaults:
 			//lerpPosition: 0.4,
@@ -269,14 +269,14 @@
 		// //const imageMaterial = new THREE.MeshBasicMaterial( { color: 0xffffff, envMap: textureCube } );
 		
 		var arWorldRoot = smoothedRoot;
-		const textureOpacity = 0.75;
+		const textureOpacity = 0.5;
 		var cubeMaterial = [
-							new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('./img/CarbonTexture_01.png'), transparent: true, opacity: textureOpacity, side: THREE.FrontSide }), //RIGHT SIDE 
-                            new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('./img/CarbonTexture_01.png'), transparent: true, opacity: textureOpacity, side: THREE.FrontSide }), //LEFT SIDE
-                            new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('./img/CarbonTexture_01.png'), transparent: true, opacity: textureOpacity, side: THREE.FrontSide }), //TOP SIDE
-                            new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('./img/CarbonTexture_01.png'), transparent: true, opacity: textureOpacity, side: THREE.FrontSide }), //BOTTOM SIDE
-                            new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('./img/CarbonTexture_01.png'), transparent: true, opacity: textureOpacity, side: THREE.FrontSide }), //FRONT SIDE
-                            new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('./img/CarbonTexture_01.png'), transparent: true, opacity: textureOpacity, side: THREE.FrontSide }) //BACK SIDE
+							new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('./img/CarbonTexture_01.png'), transparent: true, opacity: textureOpacity, side: THREE.DoubleSide }), //RIGHT SIDE 
+                            new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('./img/CarbonTexture_01.png'), transparent: true, opacity: textureOpacity, side: THREE.DoubleSide }), //LEFT SIDE
+                            new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('./img/CarbonTexture_01.png'), transparent: true, opacity: textureOpacity, side: THREE.DoubleSide }), //TOP SIDE
+                            new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('./img/CarbonTexture_01.png'), transparent: true, opacity: textureOpacity, side: THREE.DoubleSide }), //BOTTOM SIDE
+                            new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('./img/CarbonTexture_01.png'), transparent: true, opacity: textureOpacity, side: THREE.DoubleSide }), //FRONT SIDE
+                            new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('./img/CarbonTexture_01.png'), transparent: true, opacity: textureOpacity, side: THREE.DoubleSide }) //BACK SIDE
                         ];
 
     	var imageMaterial2 = new THREE.MeshFaceMaterial( cubeMaterial );
@@ -284,7 +284,7 @@
 		var geometry = new THREE.BoxGeometry(16.875, 16.875, 16.875);
 		var material = new THREE.MeshNormalMaterial({
 			transparent: true,
-			opacity: 0.75,
+			opacity: 0.5,
 			side: THREE.DoubleSide
 		});
 		//var mesh = new THREE.Mesh(geometry, material);
