@@ -283,10 +283,10 @@
     	var imageMaterial2 = new THREE.MeshFaceMaterial( cubeMaterial );
 
 		//var geometry = new THREE.BoxGeometry(16.875, 16.875, 16.875);
-		var geometry = new THREE.BoxGeometry(21.32, 21.32, 21.32); // the cube should be 27 feet (324 inches), and the unit size is 19", so scaling it by 17.053 should get us there... except the .25 marker boarder needs to be added in, so say 21.32
+		var geometry = new THREE.BoxGeometry(20.57, 20.57, 20.57); // the cube should be 27 feet (324 inches), and the unit size is 15.75" (because the black marker print is 15.75"), so scaling it by 20.57 should get us there... Because we are ignoring the 25% of the print that is white marker boarder.
 		var material = new THREE.MeshNormalMaterial({
 			transparent: true,
-			opacity: .95,
+			opacity: .75,//.95,
 			side: THREE.DoubleSide
 		});
 		//var mesh = new THREE.Mesh(geometry, material);
@@ -296,7 +296,7 @@
 		//cubeMesh.position.y = geometry.parameters.height / 2
 		
 		//cubeMesh.position.set(x, y, z) //cubeMesh.position.set( 0, -8, -6.5); //with a 16 unit cube and a three foot A-frame 
-		cubeMesh.position.set( 0, -4.25, -8.5); // The cube is about 17 units, and needs to have the A-frame about in the bottom middle 
+		cubeMesh.position.set( 0, -10, -8); // The new marker is about 15.75", and the cube is x units, and needs to have the A-frame about in the bottom middle 
 											 //the new marker with the printed marker is about four feet off the ground.
 		//scene.add(cubeMesh);
 		arWorldRoot.add(cubeMesh);
