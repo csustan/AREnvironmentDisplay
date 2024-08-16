@@ -160,7 +160,7 @@
 	   			 // number of matrices to smooth tracking over, more = smoother but slower follow
 	   			smoothCount: 5, //15, //(1-20) The number of frames that the tracking data is averaged to smooth out the marker's position, rotation, and scale.
 	    		// distance tolerance for smoothing, if smoothThreshold # of matrices are under tolerance, tracking will stay still
-	    		smoothTolerance: .75, //.05 //0.01, //skippy stutter controler -- a value between .01 and 1. High values priotize stability and smoothness over responsiveness
+	    		smoothTolerance: .15, //.05 //0.01, //skippy stutter controler -- a value between .01 and 1. High values priotize stability and smoothness over responsiveness
 	    		// threshold for smoothing, will keep still unless enough matrices are over tolerance
 	    		smoothThreshold: 3 //7 //2 //Tracking Update/Wobble control	-- think of it as the number of frames the marker needs to appear before a tracking update occurs. About ten per second in this app. This should be higher than Smooth Tolerance
 				
