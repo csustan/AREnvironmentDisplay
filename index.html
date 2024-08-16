@@ -153,15 +153,16 @@
 			
 			artoolkitMarker = new THREEx.ArMarkerControls(arToolkitContext, markerRoot, {
 				type: 'pattern',
-				patternUrl: THREEx.ArToolkitContext.baseURL + 'data/lambda.patt',
+				patternUrl: THREEx.ArToolkitContext.baseURL + 'data/DistanceMarkerV2.patt',
 				
+				minConfidence: 0.2, //(0-1) the "confidence" percentage before the app considered a Marker to be a marker. Low numbers means it will track about anything, high numbers means that it wants to be sure before it bothers.
 				smooth: true,
 	   			 // number of matrices to smooth tracking over, more = smoother but slower follow
-	   			smoothCount: 5,
+	   			smoothCount: 5, //15, //(1-20) The number of frames that the tracking data is averaged to smooth out the marker's position, rotation, and scale.
 	    		// distance tolerance for smoothing, if smoothThreshold # of matrices are under tolerance, tracking will stay still
-	    		smoothTolerance: .05,//0.01, //skippy stutter controler
+	    		smoothTolerance: .15, //.05 //0.01, //skippy stutter controler -- a value between .01 and 1. High values priotize stability and smoothness over responsiveness
 	    		// threshold for smoothing, will keep still unless enough matrices are over tolerance
-	    		smoothThreshold: 3//2 //Tracking Update/Wobble control	
+	    		smoothThreshold: 3 //7 //2 //Tracking Update/Wobble control	-- think of it as the number of frames the marker needs to appear before a tracking update occurs. About ten per second in this app. This should be higher than Smooth Tolerance
 				
 			})
 											  
@@ -238,9 +239,9 @@
 		scene.add(smoothedRoot)
 		var smoothedControls = new THREEx.ArSmoothedControls(smoothedRoot, {
 			
-			lerpPosition: .5, //Stutter
-			lerpQuaternion: 0.5,  //jiggle control
-			lerpScale: .5,
+			lerpPosition: .1,//.5, //Stutter control (.1 - 1) -- the lower it is, the looser the tracking and the smoother the updates
+			lerpQuaternion: 0.5,  //jiggle control on rotation  -- the lower the value the looser the tracking nad the soother the update
+			lerpScale: .5, //Scale jitter control, the lower the number, the looser the scale tracking and the soother the scaling
 			
 			//Defaults:
 			//lerpPosition: 0.4,
@@ -269,7 +270,7 @@
 		// //const imageMaterial = new THREE.MeshBasicMaterial( { color: 0xffffff, envMap: textureCube } );
 		
 		var arWorldRoot = smoothedRoot;
-		const textureOpacity = 0.50;
+		const textureOpacity = 0.75;
 		var cubeMaterial = [
 							new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('./img/CarbonTexture_01.png'), transparent: true, opacity: textureOpacity, side: THREE.FrontSide }), //RIGHT SIDE 
                             new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('./img/CarbonTexture_01.png'), transparent: true, opacity: textureOpacity, side: THREE.FrontSide }), //LEFT SIDE
@@ -281,10 +282,11 @@
 
     	var imageMaterial2 = new THREE.MeshFaceMaterial( cubeMaterial );
 
-		var geometry = new THREE.BoxGeometry(16.875, 16.875, 16.875);
+		//var geometry = new THREE.BoxGeometry(16.875, 16.875, 16.875);
+		var geometry = new THREE.BoxGeometry(20.57, 20.57, 20.57); // the cube should be 27 feet (324 inches), and the unit size is 15.75" (because the black marker print is 15.75"), so scaling it by 20.57 should get us there... Because we are ignoring the 25% of the print that is white marker boarder.
 		var material = new THREE.MeshNormalMaterial({
 			transparent: true,
-			opacity: .95,
+			opacity: .75,//.95,
 			side: THREE.DoubleSide
 		});
 		//var mesh = new THREE.Mesh(geometry, material);
@@ -293,8 +295,10 @@
 		//var cubeMesh = new THREE.Mesh(geometry, imageMaterial);
 		//cubeMesh.position.y = geometry.parameters.height / 2
 		
-		cubeMesh.position.set( 0, -8, -6.5); // The cube is about 16 units, and needs to have the A-frame about in the bottom middle 
-											 //the A-frame with the printed marker is about three feet off the ground.
+		//cubeMesh.position.set(x, y, z) //cubeMesh.position.set( 0, -8, -6.5); //with a 16 unit cube and a three foot A-frame 
+		cubeMesh.position.set( 0, -20, -8); // The new marker is about 15.75", and the cube is x units, and needs to have the A-frame about in the bottom middle 
+											 //the bottom of the new marker is about 30 inches off the ground.
+											 //We are also pushing the cube back so the front face about lines up with the marker.
 		//scene.add(cubeMesh);
 		arWorldRoot.add(cubeMesh);
 		onRenderFcts.push(function () {
