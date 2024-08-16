@@ -296,8 +296,9 @@
 		//cubeMesh.position.y = geometry.parameters.height / 2
 		
 		//cubeMesh.position.set(x, y, z) //cubeMesh.position.set( 0, -8, -6.5); //with a 16 unit cube and a three foot A-frame 
-		cubeMesh.position.set( 0, -10, -8); // The new marker is about 15.75", and the cube is x units, and needs to have the A-frame about in the bottom middle 
-											 //the new marker with the printed marker is about four feet off the ground.
+		cubeMesh.position.set( 0, -20, -8); // The new marker is about 15.75", and the cube is x units, and needs to have the A-frame about in the bottom middle 
+											 //the bottom of the new marker is about 30 inches off the ground.
+											 //We are also pushing the cube back so the front face about lines up with the marker.
 		//scene.add(cubeMesh);
 		arWorldRoot.add(cubeMesh);
 		onRenderFcts.push(function () {
